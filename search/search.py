@@ -100,13 +100,12 @@ def depthFirstSearch(problem):
       nos_sucessores = problem.getSuccessors(no_inicial)
       #coloca na pilha os primeiros sucessores
       for sucessor in nos_sucessores:
-        print sucessor
         stack.push(sucessor)
     
     #enquanto a pilha tiver elementos
     while(not stack.isEmpty()):
       sucessor_stack = stack.pop()
-      print sucessor_stack
+      print "Retirando da pilha: ", sucessor_stack
       #pega a parte de acao
       stack_actions.push(sucessor_stack[1])
       #pega a coordenada
@@ -123,9 +122,10 @@ def depthFirstSearch(problem):
           stack_actions.pop()
         else:
           for sucessor in nos_sucessores:
-            print sucessor
+            print "Sucessor de ",sucessor_stack[0],": ", sucessor
             #se nao esta na lista de nos ja visitados, coloca na stack
             if sucessor[0] not in list_nodes.list:
+              print "Colocando novo sucessor na pilha: ", sucessor
               stack.push(sucessor)
             
     #verificar se o retorno eh correto, se precisa alterar para Queue
