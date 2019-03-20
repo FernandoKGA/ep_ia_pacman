@@ -91,22 +91,44 @@ def depthFirstSearch(problem):
 
     #inicializacao de estruturas
     stack = util.Stack()
-    list_actions = util.Queue()
+    stack_actions = util.Stack()
     list_nodes = util.Queue()
 
     if problem.isGoalState(no_inicial):
       return []
     else:
       nos_sucessores = problem.getSuccessors(no_inicial)
+      #coloca na pilha os primeiros sucessores
       for sucessor in nos_sucessores:
-        print sucessor[0]
-        stack.push(sucessor[0])
-      while(not stack.isEmpty()):
-        print stack.pop()
+        print sucessor
+        stack.push(sucessor)
+    
     #enquanto a pilha tiver elementos
-    #while(not stack.isEmpty()):
-      
+    while(not stack.isEmpty()):
+      sucessor_stack = stack.pop()
+      print sucessor_stack
+      #pega a parte de acao
+      stack_actions.push(sucessor_stack[1])
+      #pega a coordenada
+      list_nodes.push(sucessor_stack[0])
 
+      if problem.isGoalState(sucessor_stack[0]):
+        #verificar se o retorno eh correto, se precisa alterar para Queue
+        return stack_actions.list
+      else:
+        nos_sucessores = problem.getSuccessors(sucessor_stack[0])
+        #se nao tiver nenhum sucessor daquele no
+        if len(nos_sucessores) == 0:
+          #retira da pilha de acoes
+          stack_actions.pop()
+        else:
+          for sucessor in nos_sucessores:
+            print sucessor
+            if sucessor[0] not in list_nodes.list:
+              stack.push(sucessor)
+            
+    #verificar se o retorno eh correto, se precisa alterar para Queue
+    return stack_actions.list
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
