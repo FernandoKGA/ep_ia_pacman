@@ -124,6 +124,7 @@ def depthFirstSearch(problem):
         else:
           for sucessor in nos_sucessores:
             print sucessor
+            #se nao esta na lista de nos ja visitados, coloca na stack
             if sucessor[0] not in list_nodes.list:
               stack.push(sucessor)
             
