@@ -86,6 +86,27 @@ def depthFirstSearch(problem):
     print "Is the start a goal?", problem.isGoalState(problem.getStartState())
     print "Start's successors:", problem.getSuccessors(problem.getStartState())
     
+    #inicializacao de variaveis
+    no_inicial = problem.getStartState()
+
+    #inicializacao de estruturas
+    stack = util.Stack()
+    list_actions = util.Queue()
+    list_nodes = util.Queue()
+
+    if problem.isGoalState(no_inicial):
+      return []
+    else:
+      nos_sucessores = problem.getSuccessors(no_inicial)
+      for sucessor in nos_sucessores:
+        print sucessor[0]
+        stack.push(sucessor[0])
+      while(not stack.isEmpty()):
+        print stack.pop()
+    #enquanto a pilha tiver elementos
+    #while(not stack.isEmpty()):
+      
+
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
