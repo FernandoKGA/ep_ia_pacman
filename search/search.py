@@ -107,55 +107,42 @@ def depthFirstSearch(problem):
     # coloca na pilha os primeiros sucessores
     """
     Fara o teste para cada sucessor do inicial que ele tiver,
-    se nao encontrar caminho, repete o processo para o proximo
+    se nao encontrar caminho, repete o processo para o proximo sucessor
     """ 
     for sucessor in nos_sucessores:
       stack.push(sucessor)
-      #fila_prioridade.push(sucessor,counter_suc)
-      print sucessor
       #enquanto a pilha tiver elementos
       while(not stack.isEmpty()):
         sucessor_stack = stack.list[len(stack.list)-1]
-        printa_lista(stack.list)
         #verifica se eh goal
         if problem.isGoalState(sucessor_stack[0]):
-          #printa_lista(list_nodes_visitados.list)
           for move in stack.list:
             stack_actions.push(move[1])
-          for action in stack_actions.list:
-            print action
           return stack_actions.list
         else:
           #pega a coordenada e coloca ja como visitada do removido
           list_nodes_visitados.push(sucessor_stack[0])
-          print "No visitado: ",sucessor_stack
           nos_sucessores = problem.getSuccessors(sucessor_stack[0])
+          
           suc_count = 0
-          """
-          Esta pegando todos os nos sucessores e colocando na lista se ele nao foi
-          visitado
-          CORRETO: Seguir por um so no
-          """
           for suc in nos_sucessores:
             if suc[0] not in list_nodes_visitados.list:
-              print "Sucessor de ",sucessor_stack[0],": ", suc
               stack.push(suc)
-              print "Colocando novo sucessor na pilha: ", suc[1]
               suc_count += 1
+              """
+              impede que coloque mais de um no na stack, assim ele permite continuar
+              expandindo um no por vez
+              """
               break
           #se nao tiver nenhum sucessor daquele no
           if suc_count == 0:
-            #removido = stack_actions.pop()
-            #print "Removido da pilha de acao pois nao tem: ", removido
-            removido_node = stack.pop()
-            print "Removido node pilha: ", removido_node
+            #tira da pilha
+            stack.pop()
+
       #se nao encontrou caminho entao limpa as listas
       del stack_actions.list[:]
       del list_nodes_visitados.list[:]
-      print stack_actions.list
-      print list_nodes_visitados.list
-    
-    #verificar se o retorno eh correto, se precisa alterar para Queue
+
     return stack_actions.list
     #util.raiseNotDefined()
 
