@@ -149,7 +149,7 @@ def depthFirstSearch(problem):
           removido = stack_actions.pop()
           print "Removido da pilha pois nao tem: ", removido
           #coloca a posicao reversa
-          stack_actions.push(acoes.reverseDirection(removido[1]))
+          stack_actions.push(acoes.reverseDirection(removido))
     """
     enquanto houverem sucessores que possa expandir e entrar, coloque na pilha
     se nao houver sucessor para ir, volte
