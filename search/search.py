@@ -16,8 +16,10 @@
 In search.py, you will implement generic search algorithms which are called by
 Pacman agents (in searchAgents.py).
 """
-
+#importa as funcoes de utilidade
 import util
+#importa a classe de Acoes
+from game import Actions
 
 class SearchProblem:
     """
@@ -90,44 +92,69 @@ def depthFirstSearch(problem):
     no_inicial = problem.getStartState()
 
     #inicializacao de estruturas
-    stack = util.Stack()
+    stack = util.Stack()  #cria objeto
+    fila_prioridade = util.PriorityQueue()
     stack_actions = util.Stack()
     list_nodes = util.Queue()
 
-    if problem.isGoalState(no_inicial):
+    #inicializacao de classe utilitaria
+    acoes = Actions()
+
+    if problem.isGoalState(no_inicial): #se o no inicial eh o objetivo
       return []
     else:
+      #ja coloca o inicial como visitado
+      list_nodes.push(no_inicial)
+      #pega os sucessores do inicial
       nos_sucessores = problem.getSuccessors(no_inicial)
+      counter_suc = 0
       #coloca na pilha os primeiros sucessores
       for sucessor in nos_sucessores:
-        stack.push(sucessor)
+        #stack.push(sucessor)
+        fila_prioridade.push(sucessor,counter_suc)
+        print sucessor
+        counter_suc += 1
     
     #enquanto a pilha tiver elementos
-    while(not stack.isEmpty()):
-      sucessor_stack = stack.pop()
-      print "Retirando da pilha: ", sucessor_stack
-      #pega a parte de acao
-      stack_actions.push(sucessor_stack[1])
-      #pega a coordenada
-      list_nodes.push(sucessor_stack[0])
-
+    #while(not stack.isEmpty()):
+    while(not fila_prioridade.isEmpty()):
+      #sucessor_stack = stack.pop()
+      sucessor_stack = fila_prioridade.pop()
+      print "Removido da fila priori ", sucessor_stack
+      #verifica se eh goal
       if problem.isGoalState(sucessor_stack[0]):
         #verificar se o retorno eh correto, se precisa alterar para Queue
+        stack_actions.push(sucessor_stack[1])
+        for action in stack_actions.list:
+          print action
         return stack_actions.list
       else:
+        #pega a parte de acao do removido
+        stack_actions.push(sucessor_stack[1])
+        #pega a coordenada e coloca ja como visitada do removido
+        list_nodes.push(sucessor_stack[0])
+        print sucessor_stack
         nos_sucessores = problem.getSuccessors(sucessor_stack[0])
+        suc_count = 0
+        for suc in nos_sucessores:
+          if suc[0] not in list_nodes.list:
+            print "Sucessor de ",sucessor_stack[0],": ", suc
+            #stack.push(suc)
+            fila_prioridade.push(suc,suc_count)
+            print "Colocando novo sucessor na pilha: ", suc[1]
+            suc_count += 1
         #se nao tiver nenhum sucessor daquele no
-        if len(nos_sucessores) == 0:
+        if suc_count == 0:
           #retira da pilha de acoes
-          stack_actions.pop()
-        else:
-          for sucessor in nos_sucessores:
-            print "Sucessor de ",sucessor_stack[0],": ", sucessor
-            #se nao esta na lista de nos ja visitados, coloca na stack
-            if sucessor[0] not in list_nodes.list:
-              print "Colocando novo sucessor na pilha: ", sucessor
-              stack.push(sucessor)
-            
+          removido = stack_actions.pop()
+          print "Removido da pilha pois nao tem: ", removido
+          #coloca a posicao reversa
+          stack_actions.push(acoes.reverseDirection(removido[1]))
+    """
+    enquanto houverem sucessores que possa expandir e entrar, coloque na pilha
+    se nao houver sucessor para ir, volte
+    """
+    
     #verificar se o retorno eh correto, se precisa alterar para Queue
     return stack_actions.list
     "*** YOUR CODE HERE ***"
