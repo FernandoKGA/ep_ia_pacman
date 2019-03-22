@@ -87,9 +87,9 @@ def depthFirstSearch(problem):
     To get started, you might want to try some of these simple commands to
     understand the search problem that is being passed in:
     """
-    print "Start:", problem.getStartState()
-    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
-    print "Start's successors:", problem.getSuccessors(problem.getStartState())
+    #print "Start:", problem.getStartState()
+    #print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+    #print "Start's successors:", problem.getSuccessors(problem.getStartState())
     
     # inicializacao de variaveis
     no_inicial = problem.getStartState()
@@ -144,8 +144,6 @@ def depthFirstSearch(problem):
       del list_nodes_visitados.list[:]
 
     return stack_actions.list
-    #util.raiseNotDefined()
-
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
@@ -155,7 +153,27 @@ def breadthFirstSearch(problem):
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** YOUR CODE HERE ***"
+    print "Start:", problem.getStartState()
+    print "Is the start a goal?", problem.isGoalState(problem.getStartState())
+    print "Start's successors:", problem.getSuccessors(problem.getStartState())
+    """
+    Usar problem.getCostOfActions() passando uma sequencia de acoes para ser calculado e colocado no heap, 
+    armazenando somente os caminhos que chegaram na meta.
+    """
+    
+    # inicializacao de variaveis
+    no_inicial = problem.getStartState()
+
+    # inicializacao de estruturas
+    stack = util.Stack()  
+    stack_actions = util.Stack()
+    list_nodes_visitados = util.Queue()
+
+    """
+    Usar as estruturas de Fila de Prioridade e Counter (tabela de hash).
+    Como usar o Counter? A Pilha ainda deve ser utilizada?
+    """
+
     util.raiseNotDefined()
 
 
