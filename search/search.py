@@ -147,7 +147,24 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
+    # inicializacao de variaveis - estado inicial
+    no_inicial = problem.getStartState()
+    fila = util.Queue()  # fila FIFO
+    visitados = util.Queue()  # estados visitados
+    caminho = util.Stack()
+
+    print "Teste", no_inicial
+
+    """if problem.isGoalState(no_inicial): return []  # verifica se o inicio e o objetivo
+    # visitados.push(no_inicial)
+    fila.push(no_inicial)  # coloca o inicial na fila
+    while not fila.isEmpty():  # enquanto fila nao esta vazia
+        no = fila.pop()  # tira da borda
+        visitados.push(no)  # coloca no nos visitados
+        for move in problem.getSuccessors(no):"""
+
+
+    # return caminho
     util.raiseNotDefined()
 
 
