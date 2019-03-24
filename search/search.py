@@ -99,6 +99,31 @@ def depthFirstSearch(problem):
     stack_actions = util.Stack()
     list_nodes_visitados = util.Queue()
 
+    """
+    Algoritmo DFS:
+
+    Pegue o no inicial
+    Verifique se eh o objetivo e retorne um arranjo vazio
+    Se nao for, visite o no inicial (coloque na lista de visitados)
+    Pegue os nos sucessores dele e guarde
+    Para cada sucessor que ele tem:
+      Coloque um na pilha de caminho
+      Enquanto a pilha nao esta vazia:
+        Pegue o ultimo elemento a entrar na pilha
+        Verifique se nao eh o objetivo, se for:
+          Coloque todos os passos feitos na pilha de acoes
+        Se não:
+          Coloque o ultimo elemento na lista de visitados
+          Pegue os sucessores desse ultimo
+          Para cada sucessor deste ultimo:
+            Verifique se nao esta na lista de visitados:
+              Coloque na pilha
+          Se todos estao na lista:
+            Remove esse elemento da pilha
+      Se a pilha esta vazia, esvazie a lista de acoes e de nos visitados
+      Coloque o no inicial novamente para garantir que ele nao seja visitado
+    """
+
     if problem.isGoalState(no_inicial): return [] # se o no inicial eh o objetivo
     # ja coloca o inicial como visitado
     list_nodes_visitados.push(no_inicial)
@@ -142,8 +167,10 @@ def depthFirstSearch(problem):
       #se nao encontrou caminho entao limpa as listas
       del stack_actions.list[:]
       del list_nodes_visitados.list[:]
+      list_nodes_visitados.push(no_inicial[0])
 
-    return stack_actions.list
+    if(stack_actions.isEmpty()): return []
+    else: return stack_actions.list
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
@@ -182,14 +209,47 @@ def uniformCostSearch(problem):
     no_inicial = problem.getStartState()
 
     # inicializacao de estruturas
-    stack = util.Stack()  
-    stack_actions = util.Stack()
+    actual_path_stack = util.Stack()  
+    final_stack_actions = util.Stack()
     list_nodes_visitados = util.Queue()
+    fila_prioridade = util.PriorityQueue()
 
     """
-    Usar as estruturas de Fila de Prioridade e Counter (tabela de hash).
-    Como usar o Counter? A Pilha ainda deve ser utilizada?
+    Algoritmo:
+
+    Insert the root into the pqueue
+    While the queue is not empty
+      Dequeue the maximum priority element from the queue
+      (If priorities are same, alphabetically smaller path is chosen)
+      If the path is ending in the goal state, print the path and exit
+      Else
+        Insert all the children of the dequeued element, with the cumulative costs as priority
+
+    Pegue a raiz
+    Verifique se eh o objetivo, se nao, pegue os sucessores
+    (Faca um loop entre os sucessores, tentando cada um)?
+    Insira os sucessores na fila de prioridade de acordo com o custo deles
+    Enquanto a fila de prioridade nao eh vazia
+      (Remova o elemento com a maior prioridade da fila) Pegue qual o elemento
+      Verifique se eh o objetivo, se for
+        Pegue o caminho de acoes na pilha atual e coloque na de acoes
+        Retorne esse caminho
+      Se nao
+        Coloque o elemento na lista de nos visitados
+        Pegue os seus sucessores
+        Para cada sucessor:
+          Coloque na fila somente os sucessores que não foram visitados, cada um com seu custo e prioridade
+        (Se nenhum sucessor foi inserido, remove da fila?!)
     """
+
+    if problem.isGoalState(no_inicial): return [] # se o no inicial eh o objetivo
+    # ja coloca o inicial como visitado
+    list_nodes_visitados.push(no_inicial)
+    # pega os sucessores do inicial
+    nos_sucessores = problem.getSuccessors(no_inicial)
+    # coloca na pilha os primeiros sucessores
+
+
 
     util.raiseNotDefined()
 
