@@ -247,12 +247,21 @@ def uniformCostSearch(problem):
     list_nodes_visitados.push(no_inicial)
     # pega os sucessores do inicial
     nos_sucessores = problem.getSuccessors(no_inicial)
-    # coloca na pilha os primeiros sucessores
-
-
-
-    util.raiseNotDefined()
-
+    # coloca na fila de prioridade os sucessores de acordo com o custo
+    min_inicial = 99999
+    prioridade = 0
+    #como calcular a prioridade?
+    for suc in nos_sucessores:
+      if suc[3] < min_inicial:
+        min_inicial = suc[3]
+        fila_prioridade.push(suc,prioridade)
+        prioridade += 1
+      else:
+        prioridade += 1
+    
+    #retorno das acoes
+    if(final_stack_actions.isEmpty()): return []
+    else: return final_stack_actions.list
 
 def nullHeuristic(state, problem=None):
     """
