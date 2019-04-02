@@ -1,4 +1,5 @@
 # search.py
+# coding=utf-8
 # ---------
 # Licensing Information:  You are free to use or extend these projects for
 # educational purposes provided that (1) you do not distribute or publish
@@ -100,28 +101,28 @@ def depthFirstSearch(problem):
     list_nodes_visitados = util.Queue()
 
     """
-    Algoritmo DFS:
+    Algoritmo DFS
 
-    Pegue o no inicial
-    Verifique se eh o objetivo e retorne um arranjo vazio
-    Se nao for, visite o no inicial (coloque na lista de visitados)
-    Pegue os nos sucessores dele e guarde
-    Para cada sucessor que ele tem:
-      Coloque um na pilha de caminho
-      Enquanto a pilha nao esta vazia:
-        Pegue o ultimo elemento a entrar na pilha
-        Verifique se nao eh o objetivo, se for:
-          Coloque todos os passos feitos na pilha de acoes
-        Se não:
-          Coloque o ultimo elemento na lista de visitados
-          Pegue os sucessores desse ultimo
-          Para cada sucessor deste ultimo:
-            Verifique se nao esta na lista de visitados:
-              Coloque na pilha
-          Se todos estao na lista:
-            Remove esse elemento da pilha
-      Se a pilha esta vazia, esvazie a lista de acoes e de nos visitados
-      Coloque o no inicial novamente para garantir que ele nao seja visitado
+    Pegue o no inicial.
+    Verifique se eh o objetivo e retorne um arranjo vazio.
+    Se nao for, visite o no inicial (coloque na lista de visitados).
+    Pegue os nos sucessores dele e guarde.
+    Para cada sucessor que ele tem
+      Coloque um na pilha de caminho.
+      Enquanto a pilha nao esta vazia
+        Pegue o ultimo elemento a entrar na pilha.
+        Verifique se nao eh o objetivo, se for
+          Coloque todos os passos feitos na pilha de acoes.
+        Se não
+          Coloque o ultimo elemento na lista de visitados.
+          Pegue os sucessores desse ultimo.
+          Para cada sucessor deste ultimo
+            Verifique se nao esta na lista de visitados
+              Coloque na pilha.
+          Se todos estao na lista
+            Remove esse elemento da pilha.
+      Se a pilha esta vazia, esvazie a lista de acoes e de nos visitados.
+      Coloque o no inicial novamente para garantir que ele nao seja visitado.
     """
 
     if problem.isGoalState(no_inicial): return [] # se o no inicial eh o objetivo
@@ -209,10 +210,8 @@ def uniformCostSearch(problem):
     no_inicial = problem.getStartState()
 
     # inicializacao de estruturas
-    actual_path_stack = util.Stack()  
-    final_stack_actions = util.Stack()
-    list_nodes_visitados = util.Queue()
     fila_prioridade = util.PriorityQueue()
+    nos_visitados = []
 
     """
     Algoritmo:
@@ -237,31 +236,58 @@ def uniformCostSearch(problem):
       Se nao
         Coloque o elemento na lista de nos visitados
         Pegue os seus sucessores
-        Para cada sucessor:
+        Para cada sucessor
           Coloque na fila somente os sucessores que não foram visitados, cada um com seu custo e prioridade
         (Se nenhum sucessor foi inserido, remove da fila?!)
     """
 
     if problem.isGoalState(no_inicial): return [] # se o no inicial eh o objetivo
     # ja coloca o inicial como visitado
-    list_nodes_visitados.push(no_inicial)
-    # pega os sucessores do inicial
-    nos_sucessores = problem.getSuccessors(no_inicial)
-    # coloca na fila de prioridade os sucessores de acordo com o custo
-    min_inicial = 99999
-    prioridade = 0
-    #como calcular a prioridade?
-    for suc in nos_sucessores:
-      if suc[3] < min_inicial:
-        min_inicial = suc[3]
-        fila_prioridade.push(suc,prioridade)
-        prioridade += 1
-      else:
-        prioridade += 1
+    nos_visitados.append(no_inicial[0])
     
-    #retorno das acoes
-    if(final_stack_actions.isEmpty()): return []
-    else: return final_stack_actions.list
+    """
+    A fila de prioridade salva os CAMINHOS INTEIROS, não cada nó visitado por ele, ou seja, assim existe
+    o controle de TODOS os caminhos que serão feitos durante a busca pelo objetivo
+    """
+
+    fila_prioridade.push([[no_inicial,None,0]],0)   # cria uma lista com o no inicial, custo 0 e sem direcao
+
+    while not fila_prioridade.isEmpty():
+      lista_atual = fila_prioridade.pop()           # pegamos a lista com o menor custo
+      estado_atual = lista_atual[len(lista_atual)-1] # pegamos o ultimo elemento
+
+      if estado_atual[0] not in nos_visitados:      # verifica se este estado esta presente ou nao nos nos visitados
+        nos_visitados.append(estado_atual[0])       # coloca na lista este estado atual caso esteja
+
+        if problem.isGoalState(estado_atual[0]):    # verifica se achou um no objetivo
+          resposta = []                             # cria um vetor de resposta
+          for i in range(len(lista_atual)-1):       # passa pelo caminho para pegar os nos de caminho
+            estado_inserir = lista_atual[i+1]       # pega o estado atual dado pelo indice
+            resposta.append(estado_inserir[1])      # coloca dentro do vetor de resposta
+          return resposta
+
+        nos_sucessores = problem.getSuccessors(estado_atual[0]) # pega os sucessores
+        sucessores_nao_visitados = []
+
+        for i in range(len(nos_sucessores)):                      # vasculha os sucessores
+          if nos_sucessores[i][0] not in nos_visitados:             # pega os sucessores que nao foram visitados
+            sucessores_nao_visitados.append(nos_sucessores[i])   # coloca no arranjo de sucessores nao visitados
+        """
+        Aqui eh feito o calculo para calcular o CUSTO DO NOVO CAMINHO para colocar na fila de prioridade do novo
+        CAMINHO que eh uma lista
+        """
+        custo_caminho = 0
+
+        for i in range(len(lista_atual)):            # calcula o custo total para este caminho
+          custo_caminho = custo_caminho + i
+
+        for estado_vizinho in sucessores_nao_visitados: # para cada vizinho nao visitado cria uma nova lista
+          lista_temporaria = [] + lista_atual        # cria uma lista temporaria para adicionar novo sucessor
+          lista_temporaria.append(estado_vizinho)    # adiciona esse novo sucessor
+          custo_lista_temporaria = custo_caminho + estado_vizinho[2] # coloca o novo custo desse caminho
+          fila_prioridade.push(lista_temporaria,custo_lista_temporaria) # coloca na fila de prioridade do caminho
+
+    return [] # deu erro se chegar aqui
 
 def nullHeuristic(state, problem=None):
     """
@@ -283,7 +309,10 @@ def learningRealTimeAStar(problem, heuristic=nullHeuristic):
     util.raiseNotDefined()
 
     # MAXTRIALS = ...
-    
+
+#metodos adicionais
+def custoElemento(element):
+    return element[2]  #pega o custo dele
 
 # Abbreviations 
 # *** DO NOT CHANGE THESE ***
