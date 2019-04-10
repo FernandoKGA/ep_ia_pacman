@@ -174,26 +174,64 @@ def depthFirstSearch(problem):
     else: return stack_actions.list
 
 def breadthFirstSearch(problem):
-    """Search the shallowest nodes in the search tree first."""
-    # inicializacao de variaveis - estado inicial
-    no_inicial = problem.getStartState()
-    fila = util.Queue()  # fila FIFO
-    visitados = util.Queue()  # estados visitados
-    caminho = util.Stack()
+    """
+    Lógica:
+    AUXILIARES:
+        fila = borda, nós que serão visitados
+        visitados = fila com todos os nós visitados
+        caminho = caminho que o pacman irá percorrer
 
-    print "Teste", no_inicial
+        Se o nó inicial for objetivo, retorna
+        coloca o nó inicial na borda
+        enquanto a fila não está vazia, faça:
+            tira no da borda
+            se esse nó for o objetivo, retorna
+            coloca nó na fila de visitados
+            para cada filho do nó atual, faça:
+                se o filho não está na borda ou não está explorado, faça:
+                    se filho for o objetivo, retorna
+                    insira o filho na borda
+    THOUGHTS:
+     guardar os pais de cada nó
+    """
+    """------------------------------Inicialização de variáveis e outras estruturas-------------------------------"""
+    no_inicial = problem.getStartState()                                        # no inicial
+    fila = util.Queue()                                                         # fila FIFO
+    visitados = util.Queue()                                                    # estados visitados
+    caminho = util.Stack()                                                      # caminho que o pacman terá de percorrer
 
-    """if problem.isGoalState(no_inicial): return []  # verifica se o inicio e o objetivo
-    # visitados.push(no_inicial)
-    fila.push(no_inicial)  # coloca o inicial na fila
-    while not fila.isEmpty():  # enquanto fila nao esta vazia
-        no = fila.pop()  # tira da borda
-        visitados.push(no)  # coloca no nos visitados
-        for move in problem.getSuccessors(no):"""
+    """----------------------------------------verificação só do nó incial----------------------------------------"""
+    if problem.isGoalState(no_inicial): return []                               # verifica se o inicio eh o objetivo
+    sucessores_incial = problem.getSuccessors(no_inicial)                       # pega os sucessores no nó inicial
+    i = 0                                                                       # indice para pegar os sucessores certos
+    for filho in sucessores_incial:                                             # para cada filho de nó, faça
+        if filho[i] not in visitados.list and filho[i] not in fila.list:        # se filho não está na borda ou nos visitados
+            if problem.isGoalState(filho): return caminho.list                  # se filho for o objetivo, retorna caminho
+            fila.push(filho)                                                    # se não, colocar filho na borda
+        i = i + 1                                                               # incremento do indice
+
+    """----------------------------------------verificação dos outros nós----------------------------------------"""
+    while not fila.isEmpty():                                                   # enquanto fila nao esta vazia, faça
+        no = fila.pop()                                                         # tira nó da borda
+        sucessores = problem.getSuccessors(no[0])                               # pega sucessores do nó atual
+        print ("ele pegou", no[1])
+        caminho.push(no[1])                                                     # guarda caminho
+        print ("Saiu da borda: ", no)
+        if problem.isGoalState(no[0]): break;                                   # verifica se nó é o objetivo
+        visitados.push(no[0])                                                   # se não, coloca nó na fila de visitados
+        i = 0                                                                   # indice p/ pegar os sucessores certos
+        for filho in sucessores:                                                # para cada filho de nó, faça
+            if filho[i] not in visitados.list and filho[i] not in fila.list:    # se filho não está na borda ou nos visitados
+                if problem.isGoalState(filho):                                  # se filho for o objetivo, retorna caminho
+                    return caminho.list
+                fila.push(filho)                                                # se não, colocar filho na borda
+            i = i + 1                                                           # incremento do indice
+    """-------------------------------------------montagem do caminho-------------------------------------------"""
+    return caminho.list                                                         # retorna caminho
 
 
-    # return caminho
-    util.raiseNotDefined()
+    # if suc[0] not in list_nodes_visitados.list:
+    # util.raiseNotDefined()
 
 
 def uniformCostSearch(problem):
