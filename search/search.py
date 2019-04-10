@@ -191,31 +191,42 @@ def breadthFirstSearch(problem):
                 se o filho não está na borda ou não está explorado, faça:
                     se filho for o objetivo, retorna
                     insira o filho na borda
+
+    PILHA DE ANTECESSORES:
+         usar uma estrutura para guardar o pai de cada nó, com o intuito de fazer o caminho inverso ao achar o objetivo
     THOUGHTS:
-     guardar os pais de cada nó
+        1.guardar os pais de cada nó
+        2.guardar todos os caminhos percorridos
     """
     """------------------------------Inicialização de variáveis e outras estruturas-------------------------------"""
     no_inicial = problem.getStartState()                                        # no inicial
     fila = util.Queue()                                                         # fila FIFO
     visitados = util.Queue()                                                    # estados visitados
     caminho = util.Stack()                                                      # caminho que o pacman terá de percorrer
+    aux = util.Stack()
+    # pai = util.Stack()                                                          # pilha de nós e seus antecessores
 
     """----------------------------------------verificação só do nó incial----------------------------------------"""
     if problem.isGoalState(no_inicial): return []                               # verifica se o inicio eh o objetivo
+    aux.push(no_inicial)
     sucessores_incial = problem.getSuccessors(no_inicial)                       # pega os sucessores no nó inicial
     i = 0                                                                       # indice para pegar os sucessores certos
     for filho in sucessores_incial:                                             # para cada filho de nó, faça
         if filho[i] not in visitados.list and filho[i] not in fila.list:        # se filho não está na borda ou nos visitados
             if problem.isGoalState(filho): return caminho.list                  # se filho for o objetivo, retorna caminho
-            fila.push(filho)                                                    # se não, colocar filho na borda
+            aux.push(filho)
+            fila.push(aux)                                                      # se não, colocar filho na borda
+            aux.pop()
         i = i + 1                                                               # incremento do indice
 
     """----------------------------------------verificação dos outros nós----------------------------------------"""
     while not fila.isEmpty():                                                   # enquanto fila nao esta vazia, faça
-        no = fila.pop()                                                         # tira nó da borda
+        # no = fila.pop()                                                         # tira nó da borda
+        aux = fila.pop()
+        no = aux.pop()
         sucessores = problem.getSuccessors(no[0])                               # pega sucessores do nó atual
         print ("ele pegou", no[1])
-        caminho.push(no[1])                                                     # guarda caminho
+        # caminho.push(no[1])                                                     # guarda caminho
         print ("Saiu da borda: ", no)
         if problem.isGoalState(no[0]): break;                                   # verifica se nó é o objetivo
         visitados.push(no[0])                                                   # se não, coloca nó na fila de visitados
@@ -224,9 +235,11 @@ def breadthFirstSearch(problem):
             if filho[i] not in visitados.list and filho[i] not in fila.list:    # se filho não está na borda ou nos visitados
                 if problem.isGoalState(filho):                                  # se filho for o objetivo, retorna caminho
                     return caminho.list
+
                 fila.push(filho)                                                # se não, colocar filho na borda
             i = i + 1                                                           # incremento do indice
     """-------------------------------------------montagem do caminho-------------------------------------------"""
+
     return caminho.list                                                         # retorna caminho
 
 
