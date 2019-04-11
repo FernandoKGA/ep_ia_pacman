@@ -192,77 +192,56 @@ def breadthFirstSearch(problem):
                     se filho for o objetivo, retorna
                     insira o filho na borda
 
-    PILHA DE ANTECESSORES:
+    LISTA DE ANTECESSORES:
          usar uma estrutura para guardar o pai de cada nó, com o intuito de fazer o caminho inverso ao achar o objetivo
     THOUGHTS:
         1.guardar os pais de cada nó
-        2.guardar todos os caminhos percorridos
     """
     """------------------------------Inicialização de variáveis e outras estruturas-------------------------------"""
     no_inicial = problem.getStartState()                                        # no inicial
-    print("inicial",no_inicial)
     fila = util.Queue()                                                         # fila FIFO
     visitados = util.Queue()                                                    # estados visitados
     caminho = util.Stack()                                                      # caminho que o pacman terá de percorrer
-    # aux = []                                                                    # CAMINHO
-    pai = []                                                                    # PAI?? -> pai(pai,filho)
-    ultimo = 0                                                                  # PAI?? -> auxilia a fazer backtraking
+    pai = []                                                                    # pai(pai,filho)
+    ultimo = 0                                                                  # auxilia a fazer backtraking
 
     """----------------------------------------verificação só do nó incial----------------------------------------"""
     if problem.isGoalState(no_inicial): return []                               # verifica se o inicio eh o objetivo
-    # aux.append(no_inicial)
     sucessores_incial = problem.getSuccessors(no_inicial)                       # pega os sucessores no nó inicial
     for filho in sucessores_incial:                                             # para cada filho de nó, faça
-        if filho[0] not in visitados.list and filho not in fila.list:              # se filho não está na borda ou nos visitados
+        if filho[0] not in visitados.list and filho not in fila.list:           # se filho não está na borda ou nos visitados
+            pai.append(no_inicial)                                              # coloca pai na fila
+            pai.append(filho)                                                   # coloca filho na fila
             if problem.isGoalState(filho):                                      # se o filho é estado obejtivp
                 caminho.push(filho[1])                                          # coloca o caminho p/ o nó
                 return caminho.list                                             # retorna caminho
             fila.push(filho)                                                    # se não, colocar filho na borda
     visitados.push(no_inicial)                                                  # coloca o inicial como visitado
-    pai.append(no_inicial)
+
     """----------------------------------------verificação dos outros nós----------------------------------------"""
     while not fila.isEmpty():                                                   # enquanto fila nao esta vazia, faça
         no = fila.pop()                                                         # tira nó da borda
-        # cam = fila.pop()                                                        # CAMINHOS
-        # no = cam[-3:-1]                                                         # CAMINHOS
-        print(" ")
-        print("no=", no)
-        # print("cam=", cam)                                                      # CAMINHO
         sucessores = problem.getSuccessors(no[0])                               # pega sucessores do nó atual
-        print ("ele pegou", no[1])
-        # caminho.push(no[1])                                                     # guarda caminho
-        print ("Saiu da borda: ", no)
         if problem.isGoalState(no[0]): break;                                   # verifica se nó é o objetivo
         visitados.push(no[0])                                                   # se não, coloca nó na fila de visitados
         for filho in sucessores:                                                # para cada filho de nó, faça
-            # aux = list(cam)                                                     # CAMINHOS
-            # aux.append(filho)                                                   # CAMINHOS
-            if filho[0] not in visitados.list and filho not in fila.list:       # se filho não está na borda ou nos visitados
-                print("filho[0]", filho[0])
-                pai.append(no)                                                  # PAI??
-                pai.append(filho)                                               # PAI??
-                print("pai", pai)
-                if problem.isGoalState(filho):                                  # se filho for o objetivo
-                    ultimo = filho
-                    # for move in cam:                                            # CAMINHOS
-                        # caminho.push(move[1])                                   # CAMINHOS
-                    return caminho.list                                         # retorna caminho
+            if filho[0] not in visitados.list and filho[0] not in fila.list:    # se filho não está na borda ou nos visitados
+                pai.append(no)                                                  # PAI?? adiciona pai a lista
+                pai.append(filho)                                               # PAI?? adiciona filho a lista
+                """------------------------------achou o caminho-------------------------------"""
+                if problem.isGoalState(filho[0]):                               # se filho for o objetivo
+                    ultimo = filho                                              # pega o ultimo no do caminho
+                    while ultimo is not no_inicial:                             # enquanto nao chega ao inicial
+                        for move in pai:                                        # PAI?? se movendo pela lista de pais
+                            if ultimo == no_inicial: break;                     # se chegou ao fim do caminho para
+                            if move == ultimo:                                  # se achou o filho
+                                caminho.push(ultimo[1])                         # coloca a acao
+                                index = pai.index(ultimo) - 1                   # pega o pai do no
+                                ultimo = pai[index]                             # substitui ultimo pelo pai
+                    resposta = caminho.list                                     # coloca caminho como lista
+                    resposta.reverse()                                          # inverte a resposta
+                    return resposta                                             # retorna a resposta
                 fila.push(filho)                                                # se não, colocar filho na borda
-
-    """-------------------------------------------montagem do caminho-------------------------------------------"""
-    # for move in cam:                                                            # CAMINHOS
-        # caminho.push(move[1])                                                   # CAMINHOS
-    caminho.push(ultimo[1])
-    for move in pai:                                                              # PAI??
-        if move == no_inicial: break;
-        if move == ultimo:
-            caminho.push(ultimo[1])
-            index = pai.index(ultimo) - 1
-            ultimo = pai[index]
-    return caminho.list                                                         # retorna caminho
-
-
-    # if suc[0] not in list_nodes_visitados.list:
     # util.raiseNotDefined()
 
 
