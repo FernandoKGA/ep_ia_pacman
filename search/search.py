@@ -233,7 +233,6 @@ def breadthFirstSearch(problem):
     return []
     # util.raiseNotDefined()
 
-
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
     #print "Start:", problem.getStartState()
@@ -334,12 +333,33 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
-
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    """
+    Pegar heuristica do nó: heuristic(no, problem)
+    no[2] é custo do caminho
+    """
+    """--------------------------------------------Inicialiando váriaveis------------------------------------------"""
+    no_inicial = problem.getStartState()                                                # no inicial
+    borda = util.PriorityQueue()                                                        # borda, fila de prioridades
+    visitados = []                                                                      # lista de visitados
+    acoes = []                                                                          # lista de acoes
 
+    """-----------------------------------------------------busca--------------------------------------------------"""
+    borda.push((no_inicial, [], 0), 0 + heuristic(no_inicial, problem))                 # coloca o nó inicial
+    while not borda.isEmpty():                                                          # se a borda tiver vazia
+        no, acoes, custo = borda.pop()                                                  # tira no da borda
+        if not no in visitados:                                                         # se nó não foi visitado
+            visitados.append(no)                                                        # coloca nó nos visitados
+            if problem.isGoalState(no):                                                 # Se achar nó objetivo
+                return acoes                                                            # retorna lista de acoes
+            sucessores = problem.getSuccessors(no)                                      # pegando filhos de no
+            for filho in sucessores:                                                    # para cada filho de no, faca
+                h = heuristic(filho[0], problem)                                        # heuristica do nó
+                g = custo + filho[2]                                                    # novo custo de caminho
+                borda.push((filho[0], acoes + [filho[1]], g), g + h)                    # coloca filho na borda
+    return acoes
+    # util.raiseNotDefined()
 
 def learningRealTimeAStar(problem, heuristic=nullHeuristic):
     """Execute a number of trials of LRTA* and return the best plan found."""
