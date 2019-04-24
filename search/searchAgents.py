@@ -352,7 +352,7 @@ def cornersHeuristic(state, problem):
     shortest path from the state to a goal of the problem; i.e.  it should be
     admissible (as well as consistent).
     """
-    """------------------------------------viariáveis do problema--------------------------------------"""
+    """------------------------------------viariaveis do problema--------------------------------------"""
     corners = problem.corners       # These are the corner coordinates
     walls = problem.walls           # These are the walls of the maze, as a Grid (game.py)
     resposta = 0
