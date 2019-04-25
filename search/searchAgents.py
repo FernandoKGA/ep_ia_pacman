@@ -279,7 +279,7 @@ class CornersProblem(search.SearchProblem):
         self.corners = ((1,1), (1,top), (right, 1), (right, top))           # cantos do mapa
         for corner in self.corners:
             if not startingGameState.hasFood(*corner):
-                print 'Warning: no food in corner ' + str(corner)
+                print 'Warning: no food in corner ' + str(corner)           #aviso sobre comida nos cantos
         self._expanded = 0 # DO NOT CHANGE; Number of search nodes expanded
         # Please add any code here which you would like to use
         # in initializing the problem
@@ -291,12 +291,15 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        return (self.startingPosition, [])
+        return (self.startingPosition, self.corners)
         # util.raiseNotDefined()
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
+        """
+
+        return len(state[1]) == 0
         """
         no = state[0]                                       # estado atual do pacman
         visitados = []                                      # cantos visitados
@@ -312,6 +315,7 @@ class CornersProblem(search.SearchProblem):
             return True                                     # retorna true
         return False                                        # se nao, retorna false
         # util.raiseNotDefined()
+        """
 
     def getSuccessors(self, state):
         """
@@ -336,10 +340,15 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+            x,y
             dx, dy = Actions.directionToVector(action)
-            print(dx, dy)
+            #print(dx, dy)
             nextx, nexty = int(x + dx), int(y + dy)
             hitsWall = self.walls[nextx][nexty]
+
+            if not self.walls[nextx][nexty]:
+                corners = tuple(x for x in state[1] if x != (nextx, nexty))
+                successors.append( (((nextx, nexty), corners), action, 1) )
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -376,6 +385,19 @@ def cornersHeuristic(state, problem):
     walls = problem.walls           # These are the walls of the maze, as a Grid (game.py)
     resposta = 0
     "*** YOUR CODE HERE ***"
+    xlen = corners[3][0]
+    ylen = corners[3][1]
+
+    if len(state[1]) == 0:
+        return 0
+
+    val = []
+
+    for s in state[1]:
+        val.append( abs(s[0] - state[0][0]) + abs( s[1] - state[0][1] ) )
+
+    return max(val)
+
     return resposta                 # Default to trivial solution
 
 
