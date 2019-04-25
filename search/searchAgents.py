@@ -273,10 +273,10 @@ class CornersProblem(search.SearchProblem):
         """
         Stores the walls, pacman's starting position and corners.
         """
-        self.walls = startingGameState.getWalls()
-        self.startingPosition = startingGameState.getPacmanPosition()
+        self.walls = startingGameState.getWalls()                           # paredes?
+        self.startingPosition = startingGameState.getPacmanPosition()       # posicaoo inicial
         top, right = self.walls.height-2, self.walls.width-2
-        self.corners = ((1,1), (1,top), (right, 1), (right, top))
+        self.corners = ((1,1), (1,top), (right, 1), (right, top))           # cantos do mapa
         for corner in self.corners:
             if not startingGameState.hasFood(*corner):
                 print 'Warning: no food in corner ' + str(corner)
@@ -291,14 +291,27 @@ class CornersProblem(search.SearchProblem):
         space)
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        return (self.startingPosition, [])
+        # util.raiseNotDefined()
 
     def isGoalState(self, state):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        no = state[0]                                       # estado atual do pacman
+        visitados = []                                      # cantos visitados
+        visitados.append(0)
+        cont = 0
+
+        if no in self.corners and no not in visitados:      # se no eh do canto e nao foi visitado
+            visitados.append(no)                            # coloca no como visitado
+            visitados[0] = visitados[0] + 1
+            cont = cont + 1
+        # if len(visitados) == 4:                           # se tiver 4 visitados ,
+        if cont == 4:                                       # se achou 4 cantos
+            return True                                     # retorna true
+        return False                                        # se nao, retorna false
+        # util.raiseNotDefined()
 
     def getSuccessors(self, state):
         """
@@ -310,8 +323,10 @@ class CornersProblem(search.SearchProblem):
             state, 'action' is the action required to get there, and 'stepCost'
             is the incremental cost of expanding to that successor
         """
-
+        """--------------------------------------variaveis-----------------------------------------------"""
         successors = []
+        x, y = state[0]                                     # coordenadas no estado
+
         for action in [Directions.NORTH, Directions.SOUTH, Directions.EAST, Directions.WEST]:
             # Add a successor state to the successor list if the action is legal
             # Here's a code snippet for figuring out whether a new position hits a wall:
@@ -321,6 +336,10 @@ class CornersProblem(search.SearchProblem):
             #   hitsWall = self.walls[nextx][nexty]
 
             "*** YOUR CODE HERE ***"
+            dx, dy = Actions.directionToVector(action)
+            print(dx, dy)
+            nextx, nexty = int(x + dx), int(y + dy)
+            hitsWall = self.walls[nextx][nexty]
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
@@ -357,7 +376,7 @@ def cornersHeuristic(state, problem):
     walls = problem.walls           # These are the walls of the maze, as a Grid (game.py)
     resposta = 0
     "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    return resposta                 # Default to trivial solution
 
 
 class AStarCornersAgent(SearchAgent):
