@@ -11,6 +11,12 @@
 # Student side autograding was added by Brad Miller, Nick Hay, and
 # Pieter Abbeel (pabbeel@cs.berkeley.edu).
 
+#  ---------------------- LEIA AQUI -----------------------------------
+# EP DE IA - ACH2016 - 1SEM 2019
+#   ALUNOS:
+#   Denise Keiko Ferreira Adati - 10430962
+#   Fernando Karchiloff Gouveia de Amorim - 10387644
+
 
 """
 This file contains all of the agents that can be selected to control Pacman.  To
